@@ -4,8 +4,8 @@
 #include <ctime>
 
 #define GLEW_STATIC
-#include "libs/glew.h"
-#include "libs/glfw3.h"
+#include "includes/glew.h"
+#include "includes/glfw3.h"
 
 
 #pragma comment(lib, "opengl32.lib")
