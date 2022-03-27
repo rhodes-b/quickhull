@@ -30,6 +30,7 @@ float determs(Point p1, Point p2, Point p3) {
 
 std::vector<Point> halfhull(Point p1, Point p2, std::vector<Point> s, std::vector<float> dets) {
 
+
     if(s.size() == 0) {
         std::vector<Point> res;
         res.push_back(p1); res.push_back(p2);
@@ -139,6 +140,9 @@ std::vector<Point> quickhull(std::vector<Point> points) {
 
 int main(int argc, char** argv) {
 
+    int screen_width = 480;
+    int screen_height = 480;
+
     std::vector<Point> points;
     std::vector<Point> lines;
 
@@ -153,19 +157,19 @@ int main(int argc, char** argv) {
     std::cin >> n;
 
     for(int i=0; i<n; ++i) {
-        points.push_back( Point{ float(std::rand()%480), float(480-std::rand()%480)});
+        points.push_back( Point{ float(std::rand()%screen_width), float(screen_height-std::rand()%screen_height)});
     }
 
     lines = quickhull(points);
 
     for(int i=0; i<points.size(); ++i) {
-        norm_dev(480, 480, &points[i]);
+        norm_dev(screen_width, screen_height, &points[i]);
         draw_points.push_back(points[i].x); draw_points.push_back(points[i].y);
         draw_points.push_back(0.0f); draw_points.push_back(1.0f);
     }
 
     for(int i=0; i<lines.size(); ++i) {
-        norm_dev(480, 480, &lines[i]);
+        norm_dev(screen_width, screen_height, &lines[i]);
         draw_lines.push_back(lines[i].x); draw_lines.push_back(lines[i].y);
         draw_lines.push_back(0.0f); draw_lines.push_back(1.0f);
     }
@@ -176,7 +180,7 @@ int main(int argc, char** argv) {
     return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(480, 480, "Quickhull", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(screen_width, screen_height, "Quickhull", nullptr, nullptr);
 
     if (!window) {
         std::cerr << "ERROR: could not open window with GLFW3\n";
@@ -247,7 +251,9 @@ int main(int argc, char** argv) {
 
     while(!glfwWindowShouldClose(window)) {
 
-        // POINTS!!!
+        glfwGetWindowSize(window, &screen_width, &screen_height);
+        glViewport(0, 0, screen_width, screen_height); // fixes resizing things when we change screen size
+
         glUseProgram(render_program);
 
         if(draw_points.size() > 0) {
