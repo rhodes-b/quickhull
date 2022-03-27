@@ -32,9 +32,7 @@ std::vector<Point> halfhull(Point p1, Point p2, std::vector<Point> s, std::vecto
 
 
     if(s.size() == 0) {
-        std::vector<Point> res;
-        res.push_back(p1); res.push_back(p2);
-        return res;
+        return std::vector<Point>{p1, p2};
     }
 
     int max_i = 0;
@@ -91,19 +89,16 @@ std::vector<Point> quickhull(std::vector<Point> points) {
             max_i = i;
         }
     }
-
     std::vector<Point> s;
     for (int i=0; i<points.size(); ++i) {
         if(i != min_i && i != max_i) {
             s.push_back(points[i]);
         }
     }
-
     std::vector<float> dets;
     for(int i=0; i<s.size(); ++i) {
         dets.push_back(determs(points[min_i], points[max_i], s[i]));
     }
-
 
     std::vector<Point> s1;
     std::vector<float> dets1;
@@ -114,7 +109,6 @@ std::vector<Point> quickhull(std::vector<Point> points) {
             dets1.push_back(dets[i]);
         }
     }
-
     std::vector<Point> top = halfhull(points[min_i], points[max_i], s1, dets1);
 
     std::vector<Point> s2;
@@ -126,17 +120,11 @@ std::vector<Point> quickhull(std::vector<Point> points) {
             dets2.push_back(-dets[i]);
         }
     }
-
-
     std::vector<Point> bottom = halfhull(points[max_i], points[min_i], s2, dets2);
-
 
     top.insert(top.end(), bottom.begin(), bottom.end());
     return top;
-
 }
-
-
 
 int main(int argc, char** argv) {
 
@@ -149,12 +137,11 @@ int main(int argc, char** argv) {
     std::vector<float> draw_points;
     std::vector<float> draw_lines;
 
-
-    std::srand(std::time(0));
-
     std::cout << "Enter number of random points to generate: ";
     int n;
     std::cin >> n;
+
+    std::srand(std::time(0));
 
     for(int i=0; i<n; ++i) {
         points.push_back( Point{ float(std::rand()%screen_width), float(screen_height-std::rand()%screen_height)});
@@ -167,14 +154,12 @@ int main(int argc, char** argv) {
         draw_points.push_back(points[i].x); draw_points.push_back(points[i].y);
         draw_points.push_back(0.0f); draw_points.push_back(1.0f);
     }
-
     for(int i=0; i<lines.size(); ++i) {
         norm_dev(screen_width, screen_height, &lines[i]);
         draw_lines.push_back(lines[i].x); draw_lines.push_back(lines[i].y);
         draw_lines.push_back(0.0f); draw_lines.push_back(1.0f);
     }
 
-    
     if (!glfwInit()) {
     std::cerr << "ERROR: could not start GLFW3\n";
     return 1;
@@ -187,7 +172,6 @@ int main(int argc, char** argv) {
         glfwTerminate();
         return 1;
     }
-
     glfwMakeContextCurrent(window);
 
     glewExperimental = GL_TRUE;
@@ -195,19 +179,20 @@ int main(int argc, char** argv) {
 
     // shader stuff
     static const char* vs_source = {
-        "#version 450 core                              \n"
-        "layout(location=0) in vec2 vec_points;         \n"
+        "#version 330 core                              \n"
+        "layout(location=0) in vec4 vec_points;         \n"
         "void main() {                                  \n"
-        "   gl_Position = vec4(vec_points, 0, 1);       \n"
+        "   gl_Position = vec_points;                   \n"
         "}                                              \n"
     };
 
-    const char* fs_source =
-        "#version 450 core\n"
-        "out vec4 color;"
-        "void main() {"
-        " color = vec4(1.0, 0.0, 0.0, 1.0);"
-        "}";
+    static const char* fs_source = {
+        "#version 330 core                               \n"
+        "out vec4 color;                                 \n"
+        "void main() {                                   \n"
+        "   color = vec4(1.0, 0.0, 0.0, 1.0);            \n"
+        "}                                               \n"
+    };
 
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vs_source, nullptr);
@@ -227,11 +212,11 @@ int main(int argc, char** argv) {
 
     glValidateProgram(render_program);
 
-    // GLint result;
-    // glGetProgramiv(render_program, GL_VALIDATE_STATUS, &result);
+    //GLint result;
+    //glGetProgramiv(render_program, GL_VALIDATE_STATUS, &result);
 
-    // std::cout << "compiled shaders returning program\n";
-    // std::cout << "checking program " << result  << "\n";
+    //std::cout << "compiled shaders returning program\n";
+    //std::cout << "checking program " << result  << "\n";
 
     // done with shader stuff
 
@@ -245,9 +230,7 @@ int main(int argc, char** argv) {
     GLuint va_lines;
     glCreateVertexArrays(1, &va_lines);
 
-
     glPointSize(3.0f); // we dont want one pixel sized points
-
 
     while(!glfwWindowShouldClose(window)) {
 
@@ -265,7 +248,6 @@ int main(int argc, char** argv) {
 
             glDrawArrays(GL_POINTS, 0, draw_points.size() / 4);
         }
-        
         if (draw_lines.size() > 0) {
             glBindVertexArray(va_lines);
             glEnableVertexAttribArray(0);
@@ -275,12 +257,9 @@ int main(int argc, char** argv) {
 
             glDrawArrays(GL_LINES, 0, draw_lines.size() / 4);
         }
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
     glfwTerminate();
-
-     return 0;
+    return 0;
 }
