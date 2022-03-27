@@ -148,7 +148,11 @@ int main(int argc, char** argv) {
 
     std::srand(std::time(0));
 
-    for(int i=0; i<21; ++i) {
+    std::cout << "Enter number of random points to generate: ";
+    int n;
+    std::cin >> n;
+
+    for(int i=0; i<n+1; ++i) {
         points.push_back( Point{ float(std::rand()%480), float(480-std::rand()%480)});
     }
 
@@ -172,7 +176,7 @@ int main(int argc, char** argv) {
     return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(480, 480, "Drawing a Point", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(480, 480, "Quickhull", nullptr, nullptr);
 
     if (!window) {
         std::cerr << "ERROR: could not open window with GLFW3\n";
