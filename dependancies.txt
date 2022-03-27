@@ -2,5 +2,4 @@ sudo apt install libx11-dev
 sudo apt install libgl1-mesa-dev 
 sudo apt install libglu1-mesa-dev
 
-
-reasons: x11 graphics, libGL, GL/glu.h
+reasons: libX11, libGL, GL/glu.h
