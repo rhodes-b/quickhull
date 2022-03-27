@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
     int n;
     std::cin >> n;
 
-    for(int i=0; i<n+1; ++i) {
+    for(int i=0; i<n; ++i) {
         points.push_back( Point{ float(std::rand()%480), float(480-std::rand()%480)});
     }
 
