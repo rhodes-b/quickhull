@@ -15,6 +15,7 @@ struct Point {
     float y;
 };
 
+// map screen dimensions to device dimensions (-1, 1) both x, y
 void norm_dev(int width, int height, Point* p) {
         // directly changes the point struct
         p->x = (2.0 * p->x) / width - 1;
@@ -29,8 +30,6 @@ float determs(Point p1, Point p2, Point p3) {
 }
 
 std::vector<Point> halfhull(Point p1, Point p2, std::vector<Point> s, std::vector<float> dets) {
-
-
     if(s.size() == 0) {
         return std::vector<Point>{p1, p2};
     }
@@ -126,7 +125,7 @@ std::vector<Point> quickhull(std::vector<Point> points) {
     return top;
 }
 
-int main(int argc, char** argv) {
+int main() {
 
     int screen_width = 480;
     int screen_height = 480;
