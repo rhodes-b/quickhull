@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.1)
 project(quickhull)
 
 if (WIN32)
-link_libraries(-l\"${CMAKE_SOURCE_DIR}\"/libs/windows/glew32s.lib)
-link_libraries(-l\"${CMAKE_SOURCE_DIR}\"/libs/windows/glfw3_mt.lib)
+link_directories(./libs/windows)
+link_libraries(-lglew32s)
+link_libraries(-lglfw3_mt)
 endif (WIN32)
 
 if (UNIX)
