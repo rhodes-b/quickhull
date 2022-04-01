@@ -16,8 +16,6 @@ def quickhull(points):
     # only want the points right of the line but flip sign of dets so its technically left
     s2 = [s[i] for i in range(len(s)) if dets[i] < 0]
     bottom = halfhull(points[max_i], points[min_i], s2, [-n for n in dets if n < 0])
-    print(f"TOP: {top}")
-    print(f"BOTTOM: {bottom}")
     return top + bottom
 
 
