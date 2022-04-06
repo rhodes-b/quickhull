@@ -29,6 +29,8 @@ float determs(Point p1, Point p2, Point p3) {
     return p1.x*p2.y + p3.x*p1.y + p2.x*p3.y - p3.x*p2.y - p2.x*p1.y - p1.x*p3.y;
 }
 
+// this does not deal with floating point numbers but would be a simple fix just like python to add
+// rounding of the determ to a few decimal points
 std::vector<Point> halfhull(Point p1, Point p2, std::vector<Point> s, std::vector<float> dets) {
     if(s.size() == 0) {
         return std::vector<Point>{p1, p2};
