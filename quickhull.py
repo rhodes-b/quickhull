@@ -21,16 +21,16 @@ def quickhull(points):
 
 def halfhull(p1, p2, s, determs):
     if not s:
-        print(p1, p2)
         return [[p1, p2]]
     indices = range(len(determs))
     # p_max is magnitude but since we know all dets > 0 we can just do max
     p_max = s[max(indices, key=determs.__getitem__)]
     # points left of p1 -> p_max
-    s1 = [p for p in s if determ(p1, p_max, p) > 0]
+    # using round(n, 3) so that 0.00000003 for example > 0 when it should be zero
+    s1 = [p for p in s if round(determ(p1, p_max, p), 3) > 0]
     s1_det = [determ(p1, p_max, p) for p in s1]
     # points left of p_max -> p2
-    s2 = [p for p in s if determ(p_max, p2, p) > 0]
+    s2 = [p for p in s if round(determ(p_max, p2, p), 3) > 0]
     s2_det = [determ(p_max, p2, p) for p in s2]
 
     return halfhull(p1, p_max, s1, s1_det) + halfhull(p_max, p2, s2, s2_det)
@@ -47,6 +47,7 @@ def determ(p1, p2, p3):
 if __name__ == "__main__":
     # personal example
     points = [(0, 3), (1, 0), (2, 2), (3, 1), (4, 4)]
+    # points = [(0.0, 3.0), (1.0, 0.0), (2.1, 2.2), (3.3, 1.4), (4.5, 4.7)]  # float test
     hull = quickhull(points)
     print(hull)
 
